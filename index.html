@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLP-1 Daily Check-In</title>
+<meta name="description" content="Personal GLP-1 wellness daily check-in tracker">
+<meta name="theme-color" content="#1C2B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GLP-1 Check-In">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --slate: #1C2B3A;
+    --sage: #7BA99A;
+    --sage-light: #B8D4CC;
+    --off-white: #F7F5F1;
+    --amber: #E8A44A;
+    --amber-light: #F5DFB8;
+    --muted: #8A9BAA;
+    --border: #D4CFC8;
+    --error: #C0675A;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--off-white);
+    color: var(--slate);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--slate);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  header h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    color: var(--off-white);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  header .dose-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--sage-light);
+    background: rgba(123,169,154,0.15);
+    border: 1px solid rgba(123,169,154,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* LEFT: DATA ENTRY */
+  .entry-panel {
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 28px 28px 40px;
+    overflow-y: auto;
+  }
+
+  .panel-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .date-row input[type="date"] {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--slate);
+    background: var(--off-white);
+    flex: 1;
+  }
+
+  .section-group {
+    margin-bottom: 22px;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--sage-light);
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .field-grid.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .field-grid.single {
+    grid-template-columns: 1fr;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .field input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--slate);
+    background: var(--off-white);
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--sage);
+    background: white;
+  }
+
+  .field select {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--slate);
+    background: var(--off-white);
+    transition: border-color 0.15s;
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A9BAA' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  .field select:focus {
+    outline: none;
+    border-color: var(--sage);
+    background-color: white;
+  }
+
+  .import-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 9px 14px;
+    background: var(--off-white);
+    border: 1px dashed var(--sage);
+    border-radius: 8px;
+    color: var(--sage);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    width: 100%;
+    letter-spacing: 0.02em;
+  }
+
+  .import-btn:hover {
+    background: #eef5f3;
+    border-color: #6a9889;
+  }
+
+  .import-success {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--sage);
+    margin-bottom: 10px;
+    display: none;
+    padding: 6px 10px;
+    background: #eef5f3;
+    border-radius: 6px;
+  }
+
+  .field textarea {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--slate);
+    background: var(--off-white);
+    resize: vertical;
+    min-height: 64px;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+    background: white;
+  }
+
+  .dose-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .dose-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--amber);
+    cursor: pointer;
+  }
+
+  .dose-check label {
+    font-size: 0.8rem;
+    color: var(--slate);
+    cursor: pointer;
+  }
+
+  .analyze-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 14px;
+    background: var(--slate);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .analyze-btn:hover { background: #2a3f54; }
+  .analyze-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+  /* RIGHT: ANALYSIS */
+  .analysis-panel {
+    background: var(--off-white);
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .analysis-panel .panel-label {
+    margin-bottom: 24px;
+  }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--muted);
+    gap: 12px;
+  }
+
+  .empty-state .icon {
+    font-size: 2.5rem;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .loading-state {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--muted);
+  }
+
+  .loading-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: var(--sage);
+    border-radius: 50%;
+    animation: bounce 1.2s ease-in-out infinite;
+  }
+
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-8px); opacity: 1; }
+  }
+
+  .loading-state p {
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  .response-area {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .response-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .response-card {
+    background: white;
+    border-radius: 10px;
+    padding: 24px 28px;
+    border-left: 3px solid var(--sage);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+
+  .response-card.highlight {
+    border-left-color: var(--amber);
+    background: #FFFCF6;
+  }
+
+  .response-card h3 {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+
+  .response-card.highlight h3 {
+    color: var(--amber);
+  }
+
+  .response-card .body {
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--slate);
+    white-space: pre-wrap;
+  }
+
+  .follow-up-area {
+    margin-top: 4px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .follow-up-area input {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--slate);
+    background: white;
+    transition: border-color 0.15s;
+  }
+
+  .follow-up-area input:focus {
+    outline: none;
+    border-color: var(--sage);
+  }
+
+  .follow-up-area button {
+    padding: 10px 18px;
+    background: var(--sage);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .follow-up-area button:hover { background: #6a9889; }
+  .follow-up-area button:disabled { background: var(--muted); cursor: not-allowed; }
+
+  .conversation-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .thread-message {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .thread-message.user {
+    background: var(--slate);
+    color: white;
+    align-self: flex-end;
+    max-width: 85%;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .thread-message.ai {
+    background: white;
+    color: var(--slate);
+    font-family: 'Lora', serif;
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    max-width: 92%;
+    white-space: pre-wrap;
+  }
+
+  .error-msg {
+    background: #FDF2F1;
+    border: 1px solid var(--error);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    color: var(--error);
+    display: none;
+  }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    .entry-panel { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GLP-1 Daily Check-In</h1>
+  <span class="dose-badge">Personal Health Journal</span>
+</header>
+
+<div class="layout">
+
+  <!-- LEFT: DATA ENTRY -->
+  <div class="entry-panel">
+    <div class="panel-label">Today's Data</div>
+
+    <div class="date-row">
+      <input type="date" id="entry-date">
+    </div>
+
+    <!-- Weight -->
+    <div class="section-group">
+      <div class="section-title">Weight</div>
+      <div class="field-grid three">
+        <div class="field">
+          <label>Morning (lbs)</label>
+          <input type="number" id="weight-morning" step="0.1" placeholder="0.0">
+        </div>
+        <div class="field">
+          <label>Evening (lbs)</label>
+          <input type="number" id="weight-evening" step="0.1" placeholder="0.0">
+        </div>
+        <div class="field">
+          <label>Eve – Morn delta</label>
+          <input type="number" id="weight-delta" step="0.1" placeholder="auto" readonly style="background:#eee; color: var(--muted);">
+        </div>
+      </div>
+    </div>
+
+    <!-- Blood Pressure -->
+    <div class="section-group">
+      <div class="section-title">Blood Pressure</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Systolic (mmHg)</label>
+          <input type="number" id="bp-systolic" placeholder="120">
+        </div>
+        <div class="field">
+          <label>Diastolic (mmHg)</label>
+          <input type="number" id="bp-diastolic" placeholder="80">
+        </div>
+      </div>
+    </div>
+
+    <!-- Heart Rate -->
+    <div class="section-group">
+      <div class="section-title">Heart Rate</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Active HR (bpm)</label>
+          <input type="number" id="hr-active" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Resting HR (bpm)</label>
+          <input type="number" id="hr-resting" placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="section-group">
+      <div class="section-title">Activity</div>
+      <div class="field-grid single">
+        <div class="field">
+          <label>Activity & estimated calories burned</label>
+          <textarea id="activity" placeholder="e.g. 45 min walk, moderate intensity, ~280 cal"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nutrition -->
+    <div class="section-group">
+      <div class="section-title">Nutrition</div>
+
+      <input type="file" id="cronometer-file" accept=".csv" style="display:none" onchange="importCronometer(event)">
+      <button class="import-btn" onclick="document.getElementById('cronometer-file').click()">
+        ↑ Import from Cronometer CSV
+      </button>
+      <div class="import-success" id="import-success">✓ Cronometer data imported</div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>Total calories</label>
+          <input type="number" id="cal-total" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Protein (g)</label>
+          <input type="number" id="macro-protein" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Carbs (g)</label>
+          <input type="number" id="macro-carbs" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Fat (g)</label>
+          <input type="number" id="macro-fat" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Fiber (g)</label>
+          <input type="number" id="macro-fiber" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Water (oz)</label>
+          <input type="number" id="water" placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- GLP-1 Dose -->
+    <div class="section-group">
+      <div class="section-title">GLP-1 Medication</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Days since last dose</label>
+          <input type="number" id="glp1-days" placeholder="e.g. 3">
+        </div>
+        <div class="field">
+          <label>Dosage</label>
+          <select id="glp1-dosage">
+            <option value="">Select dose</option>
+            <option value="0.25mg">0.25 mg</option>
+            <option value="0.5mg">0.5 mg</option>
+            <option value="1mg">1 mg</option>
+            <option value="2mg">2 mg</option>
+          </select>
+        </div>
+      </div>
+      <div class="dose-check" style="margin-top: 10px;">
+        <input type="checkbox" id="dose-day">
+        <label for="dose-day">Dose day today</label>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="section-group">
+      <div class="section-title">Notes</div>
+      <div class="field-grid single">
+        <div class="field">
+          <label>Stress, sleep, symptoms, travel, anything notable</label>
+          <textarea id="notes" placeholder="How are you feeling today?"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+    <button class="analyze-btn" id="analyze-btn" onclick="analyzeDay()">Analyze Today</button>
+  </div>
+
+  <!-- RIGHT: ANALYSIS -->
+  <div class="analysis-panel">
+    <div class="panel-label">Analysis</div>
+
+    <div class="empty-state" id="empty-state">
+      <div class="icon">◎</div>
+      <p>Enter today's data and hit Analyze to get your daily pattern read.</p>
+    </div>
+
+    <div class="loading-state" id="loading-state">
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <p>Reading today's numbers...</p>
+    </div>
+
+    <div class="response-area" id="response-area">
+      <div class="response-date" id="response-date"></div>
+
+      <div class="response-card highlight" id="takeaway-card">
+        <h3>Today's Takeaway</h3>
+        <div class="body" id="takeaway-text"></div>
+      </div>
+
+      <div class="response-card" id="analysis-card">
+        <h3>Pattern Read</h3>
+        <div class="body" id="analysis-text"></div>
+      </div>
+
+      <div class="conversation-thread" id="conversation-thread"></div>
+
+      <div class="follow-up-area">
+        <input type="text" id="follow-up-input" placeholder="Ask a follow-up question..." onkeydown="if(event.key==='Enter') sendFollowUp()">
+        <button id="follow-up-btn" onclick="sendFollowUp()">Ask</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Cronometer CSV Import
+  // Cronometer daily export columns: Day, Energy (kcal), Protein (g), Carbs (g), Fat (g), Fiber (g), Water (mL), ...
+  function importCronometer(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const text = e.target.result;
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return;
+
+      // Parse header row
+      const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim().toLowerCase());
+
+      // Find the row matching today's date, or use the last data row
+      const today = document.getElementById('entry-date').value; // YYYY-MM-DD
+      let targetRow = null;
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.replace(/"/g, '').trim());
+        const rowDate = cols[0]; // Cronometer exports date in first column
+        if (rowDate === today || rowDate.startsWith(today)) {
+          targetRow = cols;
+          break;
+        }
+      }
+
+      // Fall back to last row if no date match
+      if (!targetRow) {
+        const cols = lines[lines.length - 1].split(',').map(c => c.replace(/"/g, '').trim());
+        targetRow = cols;
+      }
+
+      function getVal(keywords) {
+        for (const kw of keywords) {
+          const idx = headers.findIndex(h => h.includes(kw));
+          if (idx !== -1 && targetRow[idx]) return targetRow[idx];
+        }
+        return '';
+      }
+
+      // Map Cronometer columns to fields
+      const calories = getVal(['energy', 'calories', 'kcal']);
+      const protein  = getVal(['protein']);
+      const carbs    = getVal(['carb', 'carbohydrate']);
+      const fat      = getVal(['fat']);
+      const fiber    = getVal(['fiber', 'fibre']);
+      const waterMl  = getVal(['water']);
+
+      if (calories) document.getElementById('cal-total').value   = Math.round(parseFloat(calories));
+      if (protein)  document.getElementById('macro-protein').value = Math.round(parseFloat(protein));
+      if (carbs)    document.getElementById('macro-carbs').value   = Math.round(parseFloat(carbs));
+      if (fat)      document.getElementById('macro-fat').value     = Math.round(parseFloat(fat));
+      if (fiber)    document.getElementById('macro-fiber').value   = Math.round(parseFloat(fiber));
+      // Cronometer exports water in mL; convert to oz (1 mL = 0.033814 oz)
+      if (waterMl)  document.getElementById('water').value = Math.round(parseFloat(waterMl) * 0.033814);
+
+      const successEl = document.getElementById('import-success');
+      successEl.style.display = 'block';
+      setTimeout(() => successEl.style.display = 'none', 4000);
+
+      // Reset file input so same file can be re-imported
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  // Auto-calculate weight delta
+  ['weight-morning', 'weight-evening'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const morn = parseFloat(document.getElementById('weight-morning').value);
+      const eve = parseFloat(document.getElementById('weight-evening').value);
+      if (!isNaN(morn) && !isNaN(eve)) {
+        document.getElementById('weight-delta').value = (eve - morn).toFixed(1);
+      }
+    });
+  });
+
+  // Set today's date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('entry-date').value = today;
+
+  // Conversation history for follow-ups
+  let conversationHistory = [];
+  let todayDataSummary = '';
+
+  function collectData() {
+    return {
+      date: document.getElementById('entry-date').value,
+      weight: {
+        morning: document.getElementById('weight-morning').value,
+        evening: document.getElementById('weight-evening').value,
+        delta: document.getElementById('weight-delta').value
+      },
+      bloodPressure: {
+        systolic: document.getElementById('bp-systolic').value,
+        diastolic: document.getElementById('bp-diastolic').value
+      },
+      heartRate: {
+        active: document.getElementById('hr-active').value,
+        resting: document.getElementById('hr-resting').value
+      },
+      activity: document.getElementById('activity').value,
+      nutrition: {
+        calories: document.getElementById('cal-total').value,
+        protein: document.getElementById('macro-protein').value,
+        carbs: document.getElementById('macro-carbs').value,
+        fat: document.getElementById('macro-fat').value,
+        fiber: document.getElementById('macro-fiber').value,
+        water: document.getElementById('water').value
+      },
+      glp1: {
+        daysSinceDose: document.getElementById('glp1-days').value,
+        dosage: document.getElementById('glp1-dosage').value,
+        doseDay: document.getElementById('dose-day').checked
+      },
+      notes: document.getElementById('notes').value
+    };
+  }
+
+  function buildPrompt(data) {
+    return `You are a knowledgeable health analysis assistant helping someone on semaglutide (GLP-1 medication) understand their daily health data. You are NOT a doctor and should not give medical advice. You help spot patterns, signal vs. noise, and offer practical observations.
+
+The user tracks: morning/evening weight, blood pressure, heart rate, activity, macros (protein/carbs/fat/fiber), water intake, total calories, and GLP-1 dose timing.
+
+Today's data (${data.date}):
+
+WEIGHT
+- Morning: ${data.weight.morning || 'not entered'} lbs
+- Evening: ${data.weight.evening || 'not entered'} lbs  
+- Eve–Morning delta: ${data.weight.delta || 'not entered'} lbs
+
+BLOOD PRESSURE
+- ${data.bloodPressure.systolic || 'not entered'}/${data.bloodPressure.diastolic || 'not entered'} mmHg
+
+HEART RATE
+- Active: ${data.heartRate.active || 'not entered'} bpm
+- Resting: ${data.heartRate.resting || 'not entered'} bpm
+
+ACTIVITY
+- ${data.activity || 'not entered'}
+
+NUTRITION
+- Total calories: ${data.nutrition.calories || 'not entered'}
+- Protein: ${data.nutrition.protein || 'not entered'}g
+- Carbs: ${data.nutrition.carbs || 'not entered'}g
+- Fat: ${data.nutrition.fat || 'not entered'}g
+- Fiber: ${data.nutrition.fiber || 'not entered'}g
+- Water: ${data.nutrition.water || 'not entered'} oz
+
+GLP-1 MEDICATION
+- Days since last dose: ${data.glp1.daysSinceDose || 'not entered'}
+- Dosage: ${data.glp1.dosage || 'not entered'}
+- Dose day today: ${data.glp1.doseDay ? 'Yes' : 'No'}
+
+NOTES
+${data.notes || 'None'}
+
+Respond in two clearly separated sections:
+
+TAKEAWAY: One or two sentences. The single most important thing to notice about today's data. Be direct and specific.
+
+PATTERN READ: 3-5 short paragraphs. Analyze what the numbers suggest together, not in isolation. Note anything worth watching. Flag if anything looks like noise vs. signal. Be conversational and warm, not clinical. Don't list bullet points. Write in flowing prose.
+
+Always include a reminder at the end that you're not a doctor and any health concerns should be discussed with their provider.`;
+  }
+
+  // API key — stored in sessionStorage so it persists during the session but not beyond
+  function getApiKey() {
+    let key = sessionStorage.getItem('anthropic_api_key');
+    if (!key) {
+      key = prompt('Enter your Anthropic API key to enable analysis:\n(Stored in session only — never saved to disk)');
+      if (key) sessionStorage.setItem('anthropic_api_key', key.trim());
+    }
+    return key ? key.trim() : null;
+  }
+
+  async function analyzeDay() {
+    const data = collectData();
+    const btn = document.getElementById('analyze-btn');
+    const errorEl = document.getElementById('error-msg');
+
+    // Basic validation
+    if (!data.weight.morning && !data.weight.evening && !data.nutrition.calories) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'Please enter at least a few data points before analyzing.';
+      return;
+    }
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      errorEl.style.display = 'block';
+      errorEl.textContent = 'An API key is required to use the Analyze feature.';
+      return;
+    }
+
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Analyzing...';
+
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('response-area').style.display = 'none';
+    document.getElementById('loading-state').style.display = 'flex';
+
+    todayDataSummary = buildPrompt(data);
+    conversationHistory = [];
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: todayDataSummary }]
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+      const text = result.content?.[0]?.text || '';
+
+      // Parse TAKEAWAY and PATTERN READ
+      const takeawayMatch = text.match(/TAKEAWAY[:\s]*([\s\S]*?)(?=PATTERN READ|$)/i);
+      const patternMatch = text.match(/PATTERN READ[:\s]*([\s\S]*)/i);
+
+      const takeaway = takeawayMatch ? takeawayMatch[1].trim() : text;
+      const pattern = patternMatch ? patternMatch[1].trim() : '';
+
+      document.getElementById('takeaway-text').textContent = takeaway;
+      document.getElementById('analysis-text').textContent = pattern || text;
+      document.getElementById('response-date').textContent = new Date(data.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('conversation-thread').innerHTML = '';
+
+      // Seed conversation history
+      conversationHistory = [
+        { role: 'user', content: todayDataSummary },
+        { role: 'assistant', content: text }
+      ];
+
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('response-area').style.display = 'flex';
+
+    } catch (err) {
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'flex';
+      errorEl.style.display = 'block';
+      errorEl.textContent = `Something went wrong: ${err.message}. Please try again.`;
+      console.error(err);
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Analyze Today';
+  }
+
+  async function sendFollowUp() {
+    const input = document.getElementById('follow-up-input');
+    const btn = document.getElementById('follow-up-btn');
+    const thread = document.getElementById('conversation-thread');
+    const question = input.value.trim();
+
+    if (!question || conversationHistory.length === 0) return;
+
+    const apiKey = getApiKey();
+    if (!apiKey) return;
+
+    // Add user message to thread
+    const userMsg = document.createElement('div');
+    userMsg.className = 'thread-message user';
+    userMsg.textContent = question;
+    thread.appendChild(userMsg);
+
+    input.value = '';
+    input.disabled = true;
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    conversationHistory.push({ role: 'user', content: question });
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: 'You are a knowledgeable health analysis assistant helping someone on semaglutide (GLP-1 medication). You are not a doctor. Be conversational, warm, and specific. Keep responses concise.',
+          messages: conversationHistory
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+      }
+
+      const result = await response.json();
+      const text = result.content?.[0]?.text || '';
+
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'thread-message ai';
+      aiMsg.textContent = text;
+      thread.appendChild(aiMsg);
+
+      conversationHistory.push({ role: 'assistant', content: text });
+      thread.scrollTop = thread.scrollHeight;
+
+    } catch (err) {
+      const errMsg = document.createElement('div');
+      errMsg.className = 'thread-message ai';
+      errMsg.textContent = `Sorry, something went wrong: ${err.message}`;
+      thread.appendChild(errMsg);
+    }
+
+    input.disabled = false;
+    btn.disabled = false;
+    btn.textContent = 'Ask';
+    input.focus();
+  }
+
+  // Register service worker for PWA offline support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
