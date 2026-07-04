@@ -839,13 +839,112 @@
             <option value="0.25mg">0.25 mg</option>
             <option value="0.5mg">0.5 mg</option>
             <option value="1mg">1 mg</option>
+            <option value="1.5mg">1.5 mg</option>
             <option value="2mg">2 mg</option>
+            <option value="2.5mg">2.5 mg</option>
           </select>
         </div>
       </div>
       <div class="dose-check" style="margin-top: 10px;">
         <input type="checkbox" id="dose-day">
         <label for="dose-day">Dose day today</label>
+      </div>
+    </div>
+
+    <!-- Exercise -->
+    <div class="section-group">
+      <div class="section-title">Treadmill</div>
+      <div class="field-grid">
+        <div class="field"><label>Speed (mph)</label><input type="number" step="0.1" id="ex-treadmill-speed" placeholder="0.0"></div>
+        <div class="field"><label>Incline (%)</label><input type="number" step="0.1" id="ex-treadmill-incline" placeholder="0.0"></div>
+        <div class="field"><label>Time (min)</label><input type="number" id="ex-treadmill-time" placeholder="0"></div>
+        <div class="field"><label>Mileage (mi)</label><input type="number" step="0.01" id="ex-treadmill-mileage" placeholder="0.00"></div>
+        <div class="field"><label>Calories burned</label><input type="number" id="ex-treadmill-cal" placeholder="0"></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <div class="section-title">Recumbent Bike</div>
+      <div class="field-grid">
+        <div class="field"><label>Speed (mph)</label><input type="number" step="0.1" id="ex-bike-speed" placeholder="0.0"></div>
+        <div class="field"><label>Time (min)</label><input type="number" id="ex-bike-time" placeholder="0"></div>
+        <div class="field"><label>Resistance</label><input type="number" id="ex-bike-resistance" placeholder="0"></div>
+        <div class="field"><label>Mileage (mi)</label><input type="number" step="0.01" id="ex-bike-mileage" placeholder="0.00"></div>
+        <div class="field"><label>Calories burned</label><input type="number" id="ex-bike-cal" placeholder="0"></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <div class="section-title">Elliptical</div>
+      <div class="field-grid">
+        <div class="field"><label>Level</label><input type="number" id="ex-elliptical-level" placeholder="0"></div>
+        <div class="field"><label>Time (min)</label><input type="number" id="ex-elliptical-time" placeholder="0"></div>
+        <div class="field"><label>Calories burned</label><input type="number" id="ex-elliptical-cal" placeholder="0"></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <div class="section-title">Plank (Modified or Full)</div>
+      <div class="field-grid single">
+        <div class="field"><label>Time (sec)</label><input type="number" id="ex-plank-time" placeholder="0"></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <div class="section-title">Weight Training — Legs</div>
+      <div class="field-grid three">
+        <div class="field"><label>Squats — sets</label><input type="number" id="ex-squats-sets" placeholder="0"></div>
+        <div class="field"><label>Squats — reps</label><input type="number" id="ex-squats-reps" placeholder="0"></div>
+        <div class="field"></div>
+        <div class="field"><label>Calf raises — sets</label><input type="number" id="ex-calf-sets" placeholder="0"></div>
+        <div class="field"><label>Calf raises — reps</label><input type="number" id="ex-calf-reps" placeholder="0"></div>
+        <div class="field"></div>
+        <div class="field"><label>Toe lifts — sets</label><input type="number" id="ex-toe-sets" placeholder="0"></div>
+        <div class="field"><label>Toe lifts — reps</label><input type="number" id="ex-toe-reps" placeholder="0"></div>
+        <div class="field"></div>
+      </div>
+      <div class="field-grid" style="margin-top:10px">
+        <div class="field"><label>Leg press — weight (lbs)</label><input type="number" id="ex-legpress-weight" placeholder="0"></div>
+        <div class="field"><label>Leg press — sets</label><input type="number" id="ex-legpress-sets" placeholder="0"></div>
+        <div class="field"><label>Leg press — reps</label><input type="number" id="ex-legpress-reps" placeholder="0"></div>
+        <div class="field"></div>
+        <div class="field"><label>Leg extension — weight (lbs)</label><input type="number" id="ex-legext-weight" placeholder="0"></div>
+        <div class="field"><label>Leg extension — sets</label><input type="number" id="ex-legext-sets" placeholder="0"></div>
+        <div class="field"><label>Leg extension — reps</label><input type="number" id="ex-legext-reps" placeholder="0"></div>
+        <div class="field"></div>
+      </div>
+    </div>
+
+    <div class="section-group">
+      <div class="section-title">Weight Training — Arms</div>
+      <div class="field-grid">
+        <div class="field"><label>Bicep curls — weight (lbs)</label><input type="number" id="ex-bicep-weight" placeholder="0"></div>
+        <div class="field"><label>Bicep curls — sets</label><input type="number" id="ex-bicep-sets" placeholder="0"></div>
+        <div class="field"><label>Bicep curls — reps</label><input type="number" id="ex-bicep-reps" placeholder="0"></div>
+        <div class="field"></div>
+        <div class="field"><label>Upright row — weight (lbs)</label><input type="number" id="ex-uprow-weight" placeholder="0"></div>
+        <div class="field"><label>Upright row — sets</label><input type="number" id="ex-uprow-sets" placeholder="0"></div>
+        <div class="field"><label>Upright row — reps</label><input type="number" id="ex-uprow-reps" placeholder="0"></div>
+        <div class="field"></div>
+        <div class="field"><label>Kickbacks — weight (lbs)</label><input type="number" id="ex-kickback-weight" placeholder="0"></div>
+        <div class="field"><label>Kickbacks — sets</label><input type="number" id="ex-kickback-sets" placeholder="0"></div>
+        <div class="field"><label>Kickbacks — reps</label><input type="number" id="ex-kickback-reps" placeholder="0"></div>
+        <div class="field"></div>
+      </div>
+    </div>
+
+    <!-- Meditation -->
+    <div class="section-group">
+      <div class="section-title">Meditation</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Day</label>
+          <input type="date" id="meditation-day">
+        </div>
+        <div class="field">
+          <label>Duration (min)</label>
+          <input type="number" id="meditation-duration" placeholder="0">
+        </div>
       </div>
     </div>
 
@@ -859,6 +958,7 @@
         </div>
       </div>
     </div>
+
 
     <div class="error-msg" id="error-msg"></div>
     <button class="analyze-btn" id="analyze-btn" onclick="analyzeDay()">Analyze Today</button>
@@ -1206,6 +1306,40 @@
         dosage:        document.getElementById('glp1-dosage').value,
         doseDay:       document.getElementById('dose-day').checked
       },
+      exercise: {
+        treadmill: {
+          speed: document.getElementById('ex-treadmill-speed').value,
+          incline: document.getElementById('ex-treadmill-incline').value,
+          time: document.getElementById('ex-treadmill-time').value,
+          mileage: document.getElementById('ex-treadmill-mileage').value,
+          cal: document.getElementById('ex-treadmill-cal').value
+        },
+        bike: {
+          speed: document.getElementById('ex-bike-speed').value,
+          time: document.getElementById('ex-bike-time').value,
+          resistance: document.getElementById('ex-bike-resistance').value,
+          mileage: document.getElementById('ex-bike-mileage').value,
+          cal: document.getElementById('ex-bike-cal').value
+        },
+        elliptical: {
+          level: document.getElementById('ex-elliptical-level').value,
+          time: document.getElementById('ex-elliptical-time').value,
+          cal: document.getElementById('ex-elliptical-cal').value
+        },
+        plank: { time: document.getElementById('ex-plank-time').value },
+        squats: { sets: document.getElementById('ex-squats-sets').value, reps: document.getElementById('ex-squats-reps').value },
+        calfRaises: { sets: document.getElementById('ex-calf-sets').value, reps: document.getElementById('ex-calf-reps').value },
+        toeLifts: { sets: document.getElementById('ex-toe-sets').value, reps: document.getElementById('ex-toe-reps').value },
+        legPress: { weight: document.getElementById('ex-legpress-weight').value, sets: document.getElementById('ex-legpress-sets').value, reps: document.getElementById('ex-legpress-reps').value },
+        legExtension: { weight: document.getElementById('ex-legext-weight').value, sets: document.getElementById('ex-legext-sets').value, reps: document.getElementById('ex-legext-reps').value },
+        bicepCurls: { weight: document.getElementById('ex-bicep-weight').value, sets: document.getElementById('ex-bicep-sets').value, reps: document.getElementById('ex-bicep-reps').value },
+        uprightRow: { weight: document.getElementById('ex-uprow-weight').value, sets: document.getElementById('ex-uprow-sets').value, reps: document.getElementById('ex-uprow-reps').value },
+        kickbacks: { weight: document.getElementById('ex-kickback-weight').value, sets: document.getElementById('ex-kickback-sets').value, reps: document.getElementById('ex-kickback-reps').value }
+      },
+      meditation: {
+        day: document.getElementById('meditation-day').value,
+        duration: document.getElementById('meditation-duration').value
+      },
       notes: document.getElementById('notes').value
     };
   }
@@ -1245,6 +1379,23 @@ GLP-1 MEDICATION
 - Days since last dose: ${data.glp1.daysSinceDose || 'not entered'}
 - Dosage: ${data.glp1.dosage || 'not entered'}
 - Dose day today: ${data.glp1.doseDay ? 'Yes' : 'No'}
+
+EXERCISE
+- Treadmill: speed ${data.exercise.treadmill.speed || 'n/a'} mph, incline ${data.exercise.treadmill.incline || 'n/a'}%, time ${data.exercise.treadmill.time || 'n/a'} min, mileage ${data.exercise.treadmill.mileage || 'n/a'} mi, calories ${data.exercise.treadmill.cal || 'n/a'}
+- Recumbent bike: speed ${data.exercise.bike.speed || 'n/a'} mph, time ${data.exercise.bike.time || 'n/a'} min, resistance ${data.exercise.bike.resistance || 'n/a'}, mileage ${data.exercise.bike.mileage || 'n/a'} mi, calories ${data.exercise.bike.cal || 'n/a'}
+- Elliptical: level ${data.exercise.elliptical.level || 'n/a'}, time ${data.exercise.elliptical.time || 'n/a'} min, calories ${data.exercise.elliptical.cal || 'n/a'}
+- Plank: ${data.exercise.plank.time || 'n/a'} sec
+- Squats: ${data.exercise.squats.sets || 'n/a'} sets x ${data.exercise.squats.reps || 'n/a'} reps
+- Calf raises: ${data.exercise.calfRaises.sets || 'n/a'} sets x ${data.exercise.calfRaises.reps || 'n/a'} reps
+- Toe lifts: ${data.exercise.toeLifts.sets || 'n/a'} sets x ${data.exercise.toeLifts.reps || 'n/a'} reps
+- Leg press: ${data.exercise.legPress.weight || 'n/a'} lbs, ${data.exercise.legPress.sets || 'n/a'} sets x ${data.exercise.legPress.reps || 'n/a'} reps
+- Leg extension: ${data.exercise.legExtension.weight || 'n/a'} lbs, ${data.exercise.legExtension.sets || 'n/a'} sets x ${data.exercise.legExtension.reps || 'n/a'} reps
+- Bicep curls: ${data.exercise.bicepCurls.weight || 'n/a'} lbs, ${data.exercise.bicepCurls.sets || 'n/a'} sets x ${data.exercise.bicepCurls.reps || 'n/a'} reps
+- Upright row: ${data.exercise.uprightRow.weight || 'n/a'} lbs, ${data.exercise.uprightRow.sets || 'n/a'} sets x ${data.exercise.uprightRow.reps || 'n/a'} reps
+- Kickbacks: ${data.exercise.kickbacks.weight || 'n/a'} lbs, ${data.exercise.kickbacks.sets || 'n/a'} sets x ${data.exercise.kickbacks.reps || 'n/a'} reps
+
+MEDITATION
+- Day: ${data.meditation.day || 'not entered'}, Duration: ${data.meditation.duration || 'not entered'} min
 
 NOTES
 ${data.notes || 'None'}
