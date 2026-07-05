@@ -223,6 +223,58 @@
   .dose-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--amber); cursor: pointer; }
   .dose-check label { font-size: 0.8rem; color: var(--slate); cursor: pointer; }
 
+  .water-bar-wrap { margin-top: 4px; }
+  .water-bar-track {
+    width: 100%;
+    height: 10px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .water-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--sage);
+    border-radius: 6px;
+    transition: width 0.2s;
+  }
+  .water-bar-fill.over { background: var(--amber); }
+  .water-bar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .chart-card h3 {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+  .chart-card svg { width: 100%; height: auto; display: block; }
+  .chart-empty-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .export-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
   .analyze-btn {
     width: 100%;
     margin-top: 24px;
@@ -799,17 +851,21 @@
       </div>
     </div>
 
-    <!-- Sleep -->
+    <!-- Sleep & Recovery -->
     <div class="section-group">
-      <div class="section-title">Sleep</div>
+      <div class="section-title">Sleep & Recovery</div>
       <div class="field-grid">
         <div class="field">
           <label>Hours slept</label>
           <input type="number" step="0.1" id="sleep-hours" placeholder="0.0">
         </div>
         <div class="field">
-          <label>Quality (1-10)</label>
+          <label>Sleep quality (1-10)</label>
           <input type="number" min="1" max="10" id="sleep-quality" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Soreness (1-10)</label>
+          <input type="number" min="1" max="10" id="soreness" placeholder="0">
         </div>
       </div>
     </div>
@@ -872,18 +928,26 @@
     <!-- Nutrition -->
     <div class="section-group">
       <div class="section-title">Nutrition</div>
-      <input type="file" id="cronometer-file" accept=".csv" style="display:none" onchange="importCronometer(event)">
-      <button class="import-btn" onclick="document.getElementById('cronometer-file').click()">
-        ↑ Import from Cronometer CSV
-      </button>
-      <div class="import-success" id="import-success">✓ Cronometer data imported</div>
       <div class="field-grid">
         <div class="field"><label>Total calories</label><input type="number" id="cal-total" placeholder="0"></div>
         <div class="field"><label>Protein (g)</label><input type="number" id="macro-protein" placeholder="0"></div>
         <div class="field"><label>Carbs (g)</label><input type="number" id="macro-carbs" placeholder="0"></div>
         <div class="field"><label>Fat (g)</label><input type="number" id="macro-fat" placeholder="0"></div>
         <div class="field"><label>Fiber (g)</label><input type="number" id="macro-fiber" placeholder="0"></div>
-        <div class="field"><label>Water (oz)</label><input type="number" id="water" placeholder="0"></div>
+        <div class="field"><label>Water (oz)</label><input type="number" id="water" placeholder="0" oninput="updateWaterBar()"></div>
+      </div>
+      <div class="water-bar-wrap">
+        <div class="water-bar-track"><div class="water-bar-fill" id="water-bar-fill"></div></div>
+        <div class="water-bar-label" id="water-bar-label">0 / 64 oz</div>
+      </div>
+    </div>
+
+    <!-- Supplements -->
+    <div class="section-group">
+      <div class="section-title">Supplements</div>
+      <div class="dose-check">
+        <input type="checkbox" id="supp-centrum">
+        <label for="supp-centrum">Centrum Silver for Women taken</label>
       </div>
     </div>
 
@@ -1023,6 +1087,29 @@
     </div>
 
 
+    <!-- Analysis Mode -->
+    <div class="section-group">
+      <div class="section-title">Analysis Type</div>
+      <div class="field-grid single">
+        <div class="field">
+          <label>Choose the lens for today's analysis</label>
+          <select id="analysis-mode">
+            <option value="standard">Standard Daily Check-In</option>
+            <option value="signal_noise">Signal or Noise</option>
+            <option value="weekly_reset">Weekly Reset (last 7 days)</option>
+            <option value="trend_disruptor">Trend Disruptor (last 3 vs. prior 10 days)</option>
+            <option value="overtraining">Overtraining Check</option>
+            <option value="recovery">Recovery Analysis</option>
+            <option value="strength">Strength Progression</option>
+            <option value="fat_loss">Fat Loss Efficiency</option>
+            <option value="consistency">Consistency Score</option>
+            <option value="decision_clarity">Decision Clarity</option>
+            <option value="reality_check">Reality Check</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="error-msg" id="error-msg"></div>
     <button class="analyze-btn" id="analyze-btn" onclick="analyzeDay()">Analyze Today</button>
   </div>
@@ -1111,6 +1198,21 @@
         <span id="trends-subtitle"></span>
       </div>
 
+      <div class="chart-card">
+        <h3>Weight Over Time</h3>
+        <div id="chart-weight"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Resting Heart Rate Over Time</h3>
+        <div id="chart-rhr"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>HRV Over Time</h3>
+        <div id="chart-hrv"></div>
+      </div>
+
       <div class="trends-card amber">
         <h3>Key Insight</h3>
         <div class="body" id="trends-insight"></div>
@@ -1184,9 +1286,25 @@
         <label>Weight Goal (lbs)</label>
         <input type="number" id="target-weight" placeholder="125">
       </div>
+      <div class="settings-field">
+        <label>Water Goal (oz)</label>
+        <input type="number" id="target-water" placeholder="64">
+      </div>
     </div>
     <button class="save-btn" onclick="saveTargets()" style="margin-top:8px">Save Targets</button>
     <div class="settings-status" id="targets-status"></div>
+  </div>
+
+  <div class="settings-section">
+    <h2>Export & Backup</h2>
+    <div class="export-note">
+      Every day you tap "Analyze Today," that entry is saved to this browser's local storage. Use this to download all saved entries as a CSV file, useful for backups or importing into Excel. This does not include Trends CSV uploads, only your Daily tab entries.
+    </div>
+    <div class="settings-row">
+      <button class="save-btn" onclick="exportAllEntries()">Export All Entries (CSV)</button>
+      <button class="clear-btn" onclick="clearAllEntries()">Clear Saved Entries</button>
+    </div>
+    <div class="settings-status" id="export-status"></div>
   </div>
 
 </div>
@@ -1250,6 +1368,7 @@
     if (t.protein)  document.getElementById('target-protein').value  = t.protein;
     if (t.fiber)    document.getElementById('target-fiber').value    = t.fiber;
     if (t.weight)   document.getElementById('target-weight').value   = t.weight;
+    if (t.water)    document.getElementById('target-water').value    = t.water;
   }
 
   function getTargets() {
@@ -1258,7 +1377,8 @@
       calories: saved.calories || 1400,
       protein:  saved.protein  || 90,
       fiber:    saved.fiber    || 30,
-      weight:   saved.weight   || 125
+      weight:   saved.weight   || 125,
+      water:    saved.water    || 64
     };
   }
 
@@ -1267,7 +1387,8 @@
       calories: document.getElementById('target-calories').value || 1400,
       protein:  document.getElementById('target-protein').value  || 90,
       fiber:    document.getElementById('target-fiber').value    || 30,
-      weight:   document.getElementById('target-weight').value   || 125
+      weight:   document.getElementById('target-weight').value   || 125,
+      water:    document.getElementById('target-water').value    || 64
     };
     localStorage.setItem('user_targets', JSON.stringify(t));
     const st = document.getElementById('targets-status');
@@ -1275,53 +1396,126 @@
     st.className = 'settings-status ok';
     st.style.display = 'block';
     setTimeout(() => st.style.display = 'none', 3000);
+    updateWaterBar();
   }
 
-  // ── CRONOMETER IMPORT ──
-  function importCronometer(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const text = e.target.result;
-      const lines = text.trim().split('\n');
-      if (lines.length < 2) return;
-      const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim().toLowerCase());
-      const today = document.getElementById('entry-date').value;
-      let targetRow = null;
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.replace(/"/g, '').trim());
-        if (cols[0] === today || cols[0].startsWith(today)) { targetRow = cols; break; }
-      }
-      if (!targetRow) {
-        targetRow = lines[lines.length - 1].split(',').map(c => c.replace(/"/g, '').trim());
-      }
-      function getVal(keywords) {
-        for (const kw of keywords) {
-          const idx = headers.findIndex(h => h.includes(kw));
-          if (idx !== -1 && targetRow[idx]) return targetRow[idx];
-        }
-        return '';
-      }
-      const calories = getVal(['energy','calories','kcal']);
-      const protein  = getVal(['protein']);
-      const carbs    = getVal(['carb','carbohydrate']);
-      const fat      = getVal(['fat']);
-      const fiber    = getVal(['fiber','fibre']);
-      const waterMl  = getVal(['water']);
-      if (calories) document.getElementById('cal-total').value    = Math.round(parseFloat(calories));
-      if (protein)  document.getElementById('macro-protein').value = Math.round(parseFloat(protein));
-      if (carbs)    document.getElementById('macro-carbs').value   = Math.round(parseFloat(carbs));
-      if (fat)      document.getElementById('macro-fat').value     = Math.round(parseFloat(fat));
-      if (fiber)    document.getElementById('macro-fiber').value   = Math.round(parseFloat(fiber));
-      if (waterMl)  document.getElementById('water').value         = Math.round(parseFloat(waterMl) * 0.033814);
-      const s = document.getElementById('import-success');
-      s.style.display = 'block';
-      setTimeout(() => s.style.display = 'none', 4000);
-      event.target.value = '';
-    };
-    reader.readAsText(file);
+  // ── WATER GOAL BAR ──
+  function updateWaterBar() {
+    const t = getTargets();
+    const val = parseFloat(document.getElementById('water').value) || 0;
+    const pct = Math.min((val / t.water) * 100, 100);
+    const fill = document.getElementById('water-bar-fill');
+    fill.style.width = pct + '%';
+    fill.classList.toggle('over', val > t.water);
+    document.getElementById('water-bar-label').textContent = `${val} / ${t.water} oz`;
   }
+
+  // ── EXPORT / BACKUP ──
+  function getSavedEntries() {
+    return JSON.parse(localStorage.getItem('daily_entries') || '{}');
+  }
+
+  function saveEntry(data) {
+    const entries = getSavedEntries();
+    entries[data.date] = data;
+    localStorage.setItem('daily_entries', JSON.stringify(entries));
+  }
+
+  function exportAllEntries() {
+    const entries = getSavedEntries();
+    const dates = Object.keys(entries).sort();
+    const st = document.getElementById('export-status');
+    if (dates.length === 0) {
+      st.textContent = 'No saved entries yet. Entries save automatically each time you tap Analyze Today.';
+      st.className = 'settings-status err';
+      st.style.display = 'block';
+      return;
+    }
+
+    const columns = [
+      'date','weight_morning','weight_evening','weight_delta',
+      'bp_systolic','bp_diastolic','hr_active','hr_resting','hrv',
+      'sleep_hours','sleep_quality','soreness','mood',
+      'measure_bust','measure_waist','measure_hips','measure_thigh','measure_bicep',
+      'calories','protein','carbs','fat','fiber','water',
+      'glp1_days_since_dose','glp1_dosage','glp1_dose_day','supplement_centrum',
+      'activity','notes'
+    ];
+
+    const rows = dates.map(d => {
+      const e = entries[d];
+      return [
+        e.date, e.weight?.morning, e.weight?.evening, e.weight?.delta,
+        e.bloodPressure?.systolic, e.bloodPressure?.diastolic,
+        e.heartRate?.active, e.heartRate?.resting, e.heartRate?.hrv,
+        e.sleep?.hours, e.sleep?.quality, e.sleep?.soreness, e.mood,
+        e.measurements?.bust, e.measurements?.waist, e.measurements?.hips, e.measurements?.thigh, e.measurements?.bicep,
+        e.nutrition?.calories, e.nutrition?.protein, e.nutrition?.carbs, e.nutrition?.fat, e.nutrition?.fiber, e.nutrition?.water,
+        e.glp1?.daysSinceDose, e.glp1?.dosage, e.glp1?.doseDay,
+        e.supplements?.centrum,
+        (e.activity || '').replace(/[\r\n,]+/g, ' '),
+        (e.notes || '').replace(/[\r\n,]+/g, ' ')
+      ].map(v => `"${v ?? ''}"`).join(',');
+    });
+
+    const csv = [columns.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `glp1-checkin-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    st.textContent = `✓ Exported ${dates.length} entries.`;
+    st.className = 'settings-status ok';
+    st.style.display = 'block';
+    setTimeout(() => st.style.display = 'none', 4000);
+  }
+
+  function clearAllEntries() {
+    if (!confirm('This will permanently delete all saved daily entries from this browser. Continue?')) return;
+    localStorage.removeItem('daily_entries');
+    const st = document.getElementById('export-status');
+    st.textContent = 'All saved entries cleared.';
+    st.className = 'settings-status err';
+    st.style.display = 'block';
+    setTimeout(() => st.style.display = 'none', 3000);
+  }
+
+  // ── SIMPLE SVG LINE CHART ──
+  function renderLineChart(containerId, points, unitLabel) {
+    const container = document.getElementById(containerId);
+    const valid = points.filter(p => p.value !== null && !isNaN(p.value));
+    if (valid.length < 2) {
+      container.innerHTML = `<div class="chart-empty-note">Not enough data points to chart yet (need at least 2 dated entries with this value).</div>`;
+      return;
+    }
+    const w = 600, h = 180, pad = 32;
+    const values = valid.map(p => p.value);
+    const min = Math.min(...values), max = Math.max(...values);
+    const range = (max - min) || 1;
+    const stepX = (w - pad * 2) / (valid.length - 1);
+
+    const coords = valid.map((p, i) => {
+      const x = pad + i * stepX;
+      const y = h - pad - ((p.value - min) / range) * (h - pad * 2);
+      return { x, y, value: p.value, date: p.date };
+    });
+
+    const pathD = coords.map((c, i) => (i === 0 ? 'M' : 'L') + c.x.toFixed(1) + ',' + c.y.toFixed(1)).join(' ');
+    const circles = coords.map(c => `<circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="3" fill="#7BA99A"><title>${c.date}: ${c.value}${unitLabel}</title></circle>`).join('');
+
+    container.innerHTML = `
+      <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+        <path d="${pathD}" fill="none" stroke="#7BA99A" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        ${circles}
+        <text x="${pad}" y="14" font-size="10" fill="#8A9BAA" font-family="IBM Plex Mono, monospace">${max}${unitLabel}</text>
+        <text x="${pad}" y="${h - 6}" font-size="10" fill="#8A9BAA" font-family="IBM Plex Mono, monospace">${min}${unitLabel}</text>
+      </svg>
+    `;
+  }
+
 
   // ── WEIGHT DELTA ──
   ['weight-morning','weight-evening'].forEach(id => {
@@ -1358,7 +1552,8 @@
       },
       sleep: {
         hours:   document.getElementById('sleep-hours').value,
-        quality: document.getElementById('sleep-quality').value
+        quality: document.getElementById('sleep-quality').value,
+        soreness: document.getElementById('soreness').value
       },
       mood: document.getElementById('mood-rating').value,
       measurements: {
@@ -1417,16 +1612,122 @@
         day: document.getElementById('meditation-day').value,
         duration: document.getElementById('meditation-duration').value
       },
+      supplements: {
+        centrum: document.getElementById('supp-centrum').checked
+      },
       notes: document.getElementById('notes').value
     };
   }
 
-  function buildPrompt(data) {
+  const ANALYSIS_MODES = {
+    standard: {
+      label: 'Standard Daily Check-In',
+      needsHistory: 0,
+      instructions: `TAKEAWAY: One or two sentences. The single most important thing to notice about today's data. Be direct and specific.
+
+PATTERN READ: 3-5 short paragraphs analyzing what the numbers suggest together. Note anything worth watching. Flag noise vs. signal. Be conversational and warm, not clinical. Flowing prose only, no bullet points.`
+    },
+    signal_noise: {
+      label: 'Signal or Noise',
+      needsHistory: 10,
+      instructions: `TAKEAWAY: State directly, in one sentence, whether today's number(s) are signal (a real trend) or noise (normal day-to-day variation).
+
+PATTERN READ: 2-3 short paragraphs explaining the reasoning, using today's data plus the recent history provided. Flowing prose, no bullet points.`
+    },
+    weekly_reset: {
+      label: 'Weekly Reset',
+      needsHistory: 7,
+      instructions: `TAKEAWAY: One clear, specific adjustment to make next week, based on the past 7 days.
+
+PATTERN READ: Summarize the key patterns from the past 7 days that led to this recommendation. 3-4 short paragraphs, flowing prose, no bullet points.`
+    },
+    trend_disruptor: {
+      label: 'Trend Disruptor',
+      needsHistory: 13,
+      instructions: `TAKEAWAY: State directly whether the last 3 days represent a real trend or normal variation compared to the prior 10 days.
+
+PATTERN READ: Explain the comparison in detail using the history provided. 2-4 short paragraphs, flowing prose, no bullet points.`
+    },
+    overtraining: {
+      label: 'Overtraining Check',
+      needsHistory: 7,
+      instructions: `TAKEAWAY: State directly whether there are signs of overtraining right now.
+
+PATTERN READ: Detail the supporting evidence (or lack of it) from recent training load, resting HR, HRV, sleep, and soreness, and what to adjust now if anything. Flowing prose, no bullet points.`
+    },
+    recovery: {
+      label: 'Recovery Analysis',
+      needsHistory: 3,
+      instructions: `TAKEAWAY: State directly whether recovery (sleep, soreness, HRV) looks adequate right now.
+
+PATTERN READ: Explain using the sleep, soreness, and HRV data from today and recent days. Flowing prose, no bullet points.`
+    },
+    strength: {
+      label: 'Strength Progression',
+      needsHistory: 14,
+      instructions: `TAKEAWAY: State directly whether strength numbers are progressing, maintaining, or regressing.
+
+PATTERN READ: Break this down by exercise where data allows (squats, leg press, leg extension, bicep curls, upright row, kickbacks). Flowing prose, no bullet points.`
+    },
+    fat_loss: {
+      label: 'Fat Loss Efficiency',
+      needsHistory: 14,
+      instructions: `TAKEAWAY: State directly whether similar fat loss results are being achieved with less stress or effort recently, or whether it's costing more than before.
+
+PATTERN READ: Explain the comparison using weight trend, calorie/protein consistency, and activity level over the period. Flowing prose, no bullet points.`
+    },
+    consistency: {
+      label: 'Consistency Score',
+      needsHistory: 14,
+      instructions: `TAKEAWAY: One sentence summarizing overall consistency over the period.
+
+PATTERN READ: Detail specifically where things are solid (e.g. protein, water, exercise) and where they're slipping. Flowing prose, no bullet points.`
+    },
+    decision_clarity: {
+      label: 'Decision Clarity',
+      needsHistory: 0,
+      instructions: `TAKEAWAY: State the single most logical next step today, simple and actionable.
+
+PATTERN READ: Briefly explain why, in 2-3 sentences. Flowing prose, no bullet points.`
+    },
+    reality_check: {
+      label: 'Reality Check',
+      needsHistory: 3,
+      instructions: `TAKEAWAY: State plainly whether a reaction to today's numbers would be emotional or supported by the data.
+
+PATTERN READ: Explain using the data from today and recent days. Flowing prose, no bullet points.`
+    }
+  };
+
+  function buildHistorySummary(days) {
+    const entries = getSavedEntries();
+    const dates = Object.keys(entries).sort();
+    const recent = dates.slice(-days);
+    if (recent.length === 0) return null;
+    const lines = recent.map(d => {
+      const e = entries[d];
+      return `${d}: weight ${e.weight?.morning || 'n/a'} lbs, calories ${e.nutrition?.calories || 'n/a'}, protein ${e.nutrition?.protein || 'n/a'}g, resting HR ${e.heartRate?.resting || 'n/a'}, HRV ${e.heartRate?.hrv || 'n/a'}, sleep ${e.sleep?.hours || 'n/a'}h (quality ${e.sleep?.quality || 'n/a'}), soreness ${e.sleep?.soreness || 'n/a'}, mood ${e.mood || 'n/a'}, activity: ${e.activity || 'n/a'}`;
+    });
+    return { text: lines.join('\n'), count: recent.length, requested: days };
+  }
+
+
+  function buildPrompt(data, mode) {
+    const modeConfig = ANALYSIS_MODES[mode] || ANALYSIS_MODES.standard;
+    let historyBlock = '';
+    if (modeConfig.needsHistory > 0) {
+      const history = buildHistorySummary(modeConfig.needsHistory);
+      if (history) {
+        historyBlock = `\nRECENT HISTORY (${history.count} of ${history.requested} requested days available, saved from previous check-ins):\n${history.text}\n`;
+      } else {
+        historyBlock = `\nRECENT HISTORY: No previous saved entries found yet. Base this analysis on today's data alone and note that more history will improve future analyses of this type.\n`;
+      }
+    }
     const t = getTargets();
     return `You are a knowledgeable health analysis assistant helping someone on semaglutide (GLP-1 medication) understand their daily health data. You are NOT a doctor and should not give medical advice. Help spot patterns, signal vs. noise, and offer practical observations.
 
 Personal targets: ${t.calories} kcal/day, ${t.protein}g protein, ${t.fiber}g+ fiber, goal weight ${t.weight} lbs.
-
+${historyBlock}
 Today's data (${data.date}):
 
 WEIGHT
@@ -1442,9 +1743,10 @@ HEART RATE
 - Resting: ${data.heartRate.resting || 'not entered'} bpm
 - HRV: ${data.heartRate.hrv || 'not entered'} ms
 
-SLEEP
+SLEEP & RECOVERY
 - Hours: ${data.sleep.hours || 'not entered'}
-- Quality (1-10): ${data.sleep.quality || 'not entered'}
+- Sleep quality (1-10): ${data.sleep.quality || 'not entered'}
+- Soreness (1-10): ${data.sleep.soreness || 'not entered'}
 
 MOOD
 - Rating (1-10): ${data.mood || 'not entered'}
@@ -1490,14 +1792,15 @@ EXERCISE
 MEDITATION
 - Day: ${data.meditation.day || 'not entered'}, Duration: ${data.meditation.duration || 'not entered'} min
 
+SUPPLEMENTS
+- Centrum Silver for Women taken: ${data.supplements.centrum ? 'Yes' : 'No'}
+
 NOTES
 ${data.notes || 'None'}
 
-Respond in two clearly separated sections:
+Respond in exactly two clearly separated sections:
 
-TAKEAWAY: One or two sentences. The single most important thing to notice about today's data. Be direct and specific.
-
-PATTERN READ: 3-5 short paragraphs analyzing what the numbers suggest together. Note anything worth watching. Flag noise vs. signal. Be conversational and warm, not clinical. Flowing prose only, no bullet points.
+${modeConfig.instructions}
 
 End with a brief reminder that you are not a doctor and health concerns should be discussed with their provider.`;
   }
@@ -1552,8 +1855,10 @@ End with a brief reminder that you are not a doctor and health concerns should b
     document.getElementById('response-area').style.display = 'none';
     document.getElementById('loading-state').style.display = 'flex';
 
-    todayDataSummary = buildPrompt(data);
+    const selectedMode = document.getElementById('analysis-mode').value;
+    todayDataSummary = buildPrompt(data, selectedMode);
     conversationHistory = [];
+    saveEntry(data);
 
     try {
       const text = await callApi([{ role: 'user', content: todayDataSummary }]);
@@ -1702,6 +2007,29 @@ RECOMMENDATIONS: 3-4 specific, actionable suggestions for the coming ${period ==
 Write in warm, conversational prose. No bullet points within sections. End with a brief reminder that you are not a doctor and medical concerns should be discussed with their provider.`;
   }
 
+  function getSeriesFromTrendsData(data, period, keywords) {
+    const now = new Date();
+    const cutoff = new Date(now);
+    if (period === 'week')  cutoff.setDate(now.getDate() - 7);
+    if (period === 'month') cutoff.setDate(now.getDate() - 30);
+
+    const headers = data.headers;
+    const colIdx = headers.findIndex(h => keywords.some(kw => h.includes(kw)));
+    if (colIdx === -1) return [];
+
+    const colKey = headers[colIdx];
+    const points = data.rows.map(r => {
+      const dateStr = r['date'] || r['day'] || '';
+      const d = new Date(dateStr);
+      const value = parseFloat(r[colKey]);
+      return { date: dateStr, d, value: isNaN(value) ? null : value };
+    }).filter(p => !isNaN(p.d.getTime()));
+
+    const filtered = points.filter(p => p.d >= cutoff);
+    const subset = filtered.length > 0 ? filtered : points.slice(-Math.min(period === 'week' ? 7 : 30, points.length));
+    return subset.sort((a, b) => a.d - b.d);
+  }
+
   async function analyzeTrends() {
     const btn = document.getElementById('trends-analyze-btn');
     const errorEl = document.getElementById('trends-error');
@@ -1749,6 +2077,13 @@ Write in warm, conversational prose. No bullet points within sections. End with 
       document.getElementById('trends-title').textContent    = periodLabel;
       document.getElementById('trends-subtitle').textContent = dateRange;
 
+      const weightSeries = getSeriesFromTrendsData(trendsData, trendsPeriod, ['weight']);
+      const rhrSeries    = getSeriesFromTrendsData(trendsData, trendsPeriod, ['resting']);
+      const hrvSeries    = getSeriesFromTrendsData(trendsData, trendsPeriod, ['hrv']);
+      renderLineChart('chart-weight', weightSeries, ' lbs');
+      renderLineChart('chart-rhr', rhrSeries, ' bpm');
+      renderLineChart('chart-hrv', hrvSeries, ' ms');
+
       document.getElementById('trends-loading').style.display = 'none';
       document.getElementById('trends-response').style.display = 'flex';
 
@@ -1766,6 +2101,7 @@ Write in warm, conversational prose. No bullet points within sections. End with 
   // ── INIT ──
   loadSavedKey();
   loadSavedTargets();
+  updateWaterBar();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
