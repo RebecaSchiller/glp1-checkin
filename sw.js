@@ -1,4 +1,4 @@
-const CACHE_NAME = 'glp1-checkin-v6';
+const CACHE_NAME = 'glp1-checkin-v7';
 const ASSETS = [
   './index.html',
   './manifest.json'

@@ -267,6 +267,73 @@
     margin-top: 4px;
   }
 
+  .meal-block { margin-bottom: 16px; }
+  .meal-block:last-of-type { margin-bottom: 0; }
+  .meal-block .meal-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--slate);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .ex-add-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 9px 14px;
+    background: var(--sage);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .ex-add-btn:hover { background: #6a9384; }
+
+  .ex-log-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  .ex-log-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .ex-log-item .ex-log-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--slate);
+    line-height: 1.5;
+  }
+  .ex-log-item .ex-log-text strong {
+    color: var(--sage);
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .ex-log-remove {
+    background: none;
+    border: none;
+    color: var(--error);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+  .ex-log-remove:hover { opacity: 0.65; }
+  .ex-log-empty { font-size: 0.75rem; color: var(--muted); font-style: italic; margin-top: 8px; }
+
   .chart-card {
     background: white;
     border-radius: 10px;
@@ -949,12 +1016,56 @@
     <!-- Nutrition -->
     <div class="section-group">
       <div class="section-title">Nutrition</div>
-      <div class="field-grid">
-        <div class="field"><label>Total calories</label><input type="number" id="cal-total" placeholder="0"></div>
-        <div class="field"><label>Protein (g)</label><input type="number" id="macro-protein" placeholder="0"></div>
-        <div class="field"><label>Carbs (g)</label><input type="number" id="macro-carbs" placeholder="0"></div>
-        <div class="field"><label>Fat (g)</label><input type="number" id="macro-fat" placeholder="0"></div>
-        <div class="field"><label>Fiber (g)</label><input type="number" id="macro-fiber" placeholder="0"></div>
+
+      <div class="meal-block">
+        <div class="meal-title">Breakfast</div>
+        <div class="field-grid three">
+          <div class="field"><label>Calories</label><input type="number" id="nut-breakfast-cal" placeholder="0"></div>
+          <div class="field"><label>Protein (g)</label><input type="number" id="nut-breakfast-protein" placeholder="0"></div>
+          <div class="field"><label>Fat (g)</label><input type="number" id="nut-breakfast-fat" placeholder="0"></div>
+          <div class="field"><label>Carbs (g)</label><input type="number" id="nut-breakfast-carbs" placeholder="0"></div>
+          <div class="field"><label>Fiber (g)</label><input type="number" id="nut-breakfast-fiber" placeholder="0"></div>
+          <div class="field"><label>Sodium (mg)</label><input type="number" id="nut-breakfast-sodium" placeholder="0"></div>
+        </div>
+      </div>
+
+      <div class="meal-block">
+        <div class="meal-title">Lunch</div>
+        <div class="field-grid three">
+          <div class="field"><label>Calories</label><input type="number" id="nut-lunch-cal" placeholder="0"></div>
+          <div class="field"><label>Protein (g)</label><input type="number" id="nut-lunch-protein" placeholder="0"></div>
+          <div class="field"><label>Fat (g)</label><input type="number" id="nut-lunch-fat" placeholder="0"></div>
+          <div class="field"><label>Carbs (g)</label><input type="number" id="nut-lunch-carbs" placeholder="0"></div>
+          <div class="field"><label>Fiber (g)</label><input type="number" id="nut-lunch-fiber" placeholder="0"></div>
+          <div class="field"><label>Sodium (mg)</label><input type="number" id="nut-lunch-sodium" placeholder="0"></div>
+        </div>
+      </div>
+
+      <div class="meal-block">
+        <div class="meal-title">Dinner</div>
+        <div class="field-grid three">
+          <div class="field"><label>Calories</label><input type="number" id="nut-dinner-cal" placeholder="0"></div>
+          <div class="field"><label>Protein (g)</label><input type="number" id="nut-dinner-protein" placeholder="0"></div>
+          <div class="field"><label>Fat (g)</label><input type="number" id="nut-dinner-fat" placeholder="0"></div>
+          <div class="field"><label>Carbs (g)</label><input type="number" id="nut-dinner-carbs" placeholder="0"></div>
+          <div class="field"><label>Fiber (g)</label><input type="number" id="nut-dinner-fiber" placeholder="0"></div>
+          <div class="field"><label>Sodium (mg)</label><input type="number" id="nut-dinner-sodium" placeholder="0"></div>
+        </div>
+      </div>
+
+      <div class="meal-block">
+        <div class="meal-title">Snacks</div>
+        <div class="field-grid three">
+          <div class="field"><label>Calories</label><input type="number" id="nut-snack-cal" placeholder="0"></div>
+          <div class="field"><label>Protein (g)</label><input type="number" id="nut-snack-protein" placeholder="0"></div>
+          <div class="field"><label>Fat (g)</label><input type="number" id="nut-snack-fat" placeholder="0"></div>
+          <div class="field"><label>Carbs (g)</label><input type="number" id="nut-snack-carbs" placeholder="0"></div>
+          <div class="field"><label>Fiber (g)</label><input type="number" id="nut-snack-fiber" placeholder="0"></div>
+          <div class="field"><label>Sodium (mg)</label><input type="number" id="nut-snack-sodium" placeholder="0"></div>
+        </div>
+      </div>
+
+      <div class="field-grid single" style="margin-top:6px">
         <div class="field"><label>Water (oz)</label><input type="number" id="water" placeholder="0" oninput="updateWaterBar()"></div>
       </div>
       <div class="water-bar-wrap">
@@ -1001,84 +1112,38 @@
 
     <!-- Exercise -->
     <div class="section-group">
-      <div class="section-title">Treadmill</div>
-      <div class="field-grid">
-        <div class="field"><label>Speed (mph)</label><input type="number" step="0.1" id="ex-treadmill-speed" placeholder="0.0"></div>
-        <div class="field"><label>Incline (%)</label><input type="number" step="0.1" id="ex-treadmill-incline" placeholder="0.0"></div>
-        <div class="field"><label>Time (min)</label><input type="number" id="ex-treadmill-time" placeholder="0"></div>
-        <div class="field"><label>Mileage (mi)</label><input type="number" step="0.01" id="ex-treadmill-mileage" placeholder="0.00"></div>
-        <div class="field"><label>Calories burned</label><input type="number" id="ex-treadmill-cal" placeholder="0"></div>
-      </div>
-    </div>
-
-    <div class="section-group">
-      <div class="section-title">Recumbent Bike</div>
-      <div class="field-grid">
-        <div class="field"><label>Speed (mph)</label><input type="number" step="0.1" id="ex-bike-speed" placeholder="0.0"></div>
-        <div class="field"><label>Time (min)</label><input type="number" id="ex-bike-time" placeholder="0"></div>
-        <div class="field"><label>Resistance</label><input type="number" id="ex-bike-resistance" placeholder="0"></div>
-        <div class="field"><label>Mileage (mi)</label><input type="number" step="0.01" id="ex-bike-mileage" placeholder="0.00"></div>
-        <div class="field"><label>Calories burned</label><input type="number" id="ex-bike-cal" placeholder="0"></div>
-      </div>
-    </div>
-
-    <div class="section-group">
-      <div class="section-title">Elliptical</div>
-      <div class="field-grid">
-        <div class="field"><label>Level</label><input type="number" id="ex-elliptical-level" placeholder="0"></div>
-        <div class="field"><label>Time (min)</label><input type="number" id="ex-elliptical-time" placeholder="0"></div>
-        <div class="field"><label>Calories burned</label><input type="number" id="ex-elliptical-cal" placeholder="0"></div>
-      </div>
-    </div>
-
-    <div class="section-group">
-      <div class="section-title">Plank (Modified or Full)</div>
+      <div class="section-title">Exercise</div>
       <div class="field-grid single">
-        <div class="field"><label>Time (sec)</label><input type="number" id="ex-plank-time" placeholder="0"></div>
+        <div class="field">
+          <label>Add an exercise</label>
+          <select id="ex-type" onchange="renderExerciseFields()">
+            <option value="">Select exercise</option>
+            <optgroup label="Aerobic">
+              <option value="treadmill">Treadmill</option>
+              <option value="bike">Recumbent Bike</option>
+              <option value="elliptical">Elliptical</option>
+              <option value="walking">Walking</option>
+            </optgroup>
+            <optgroup label="Strength (dumbbell / body bar)">
+              <option value="squats">Squats</option>
+              <option value="calfRaises">Calf Raises</option>
+              <option value="toeLifts">Toe Lifts</option>
+              <option value="legPress">Leg Press</option>
+              <option value="legExtension">Leg Extension</option>
+              <option value="bicepCurls">Bicep Curls</option>
+              <option value="uprightRow">Upright Row</option>
+              <option value="kickbacks">Kickbacks</option>
+            </optgroup>
+            <optgroup label="Core">
+              <option value="plank">Plank (Modified or Full)</option>
+            </optgroup>
+          </select>
+        </div>
       </div>
-    </div>
-
-    <div class="section-group">
-      <div class="section-title">Weight Training — Legs</div>
-      <div class="field-grid three">
-        <div class="field"><label>Squats — sets</label><input type="number" id="ex-squats-sets" placeholder="0"></div>
-        <div class="field"><label>Squats — reps</label><input type="number" id="ex-squats-reps" placeholder="0"></div>
-        <div class="field"></div>
-        <div class="field"><label>Calf raises — sets</label><input type="number" id="ex-calf-sets" placeholder="0"></div>
-        <div class="field"><label>Calf raises — reps</label><input type="number" id="ex-calf-reps" placeholder="0"></div>
-        <div class="field"></div>
-        <div class="field"><label>Toe lifts — sets</label><input type="number" id="ex-toe-sets" placeholder="0"></div>
-        <div class="field"><label>Toe lifts — reps</label><input type="number" id="ex-toe-reps" placeholder="0"></div>
-        <div class="field"></div>
-      </div>
-      <div class="field-grid" style="margin-top:10px">
-        <div class="field"><label>Leg press — weight (lbs)</label><input type="number" id="ex-legpress-weight" placeholder="0"></div>
-        <div class="field"><label>Leg press — sets</label><input type="number" id="ex-legpress-sets" placeholder="0"></div>
-        <div class="field"><label>Leg press — reps</label><input type="number" id="ex-legpress-reps" placeholder="0"></div>
-        <div class="field"></div>
-        <div class="field"><label>Leg extension — weight (lbs)</label><input type="number" id="ex-legext-weight" placeholder="0"></div>
-        <div class="field"><label>Leg extension — sets</label><input type="number" id="ex-legext-sets" placeholder="0"></div>
-        <div class="field"><label>Leg extension — reps</label><input type="number" id="ex-legext-reps" placeholder="0"></div>
-        <div class="field"></div>
-      </div>
-    </div>
-
-    <div class="section-group">
-      <div class="section-title">Weight Training — Arms</div>
-      <div class="field-grid">
-        <div class="field"><label>Bicep curls — weight (lbs)</label><input type="number" id="ex-bicep-weight" placeholder="0"></div>
-        <div class="field"><label>Bicep curls — sets</label><input type="number" id="ex-bicep-sets" placeholder="0"></div>
-        <div class="field"><label>Bicep curls — reps</label><input type="number" id="ex-bicep-reps" placeholder="0"></div>
-        <div class="field"></div>
-        <div class="field"><label>Upright row — weight (lbs)</label><input type="number" id="ex-uprow-weight" placeholder="0"></div>
-        <div class="field"><label>Upright row — sets</label><input type="number" id="ex-uprow-sets" placeholder="0"></div>
-        <div class="field"><label>Upright row — reps</label><input type="number" id="ex-uprow-reps" placeholder="0"></div>
-        <div class="field"></div>
-        <div class="field"><label>Kickbacks — weight (lbs)</label><input type="number" id="ex-kickback-weight" placeholder="0"></div>
-        <div class="field"><label>Kickbacks — sets</label><input type="number" id="ex-kickback-sets" placeholder="0"></div>
-        <div class="field"><label>Kickbacks — reps</label><input type="number" id="ex-kickback-reps" placeholder="0"></div>
-        <div class="field"></div>
-      </div>
+      <div id="ex-fields" class="field-grid" style="margin-top:10px"></div>
+      <button type="button" class="ex-add-btn" onclick="addExerciseEntry()">+ Add to today's log</button>
+      <div id="ex-log-list" class="ex-log-list"></div>
+      <div id="ex-log-empty" class="ex-log-empty">No exercises logged yet today.</div>
     </div>
 
     <!-- Meditation -->
@@ -1449,23 +1514,39 @@
       'bp_systolic','bp_diastolic','hr_active','hr_resting','hrv',
       'sleep_hours','sleep_quality','soreness','mood',
       'measure_bust','measure_waist','measure_hips','measure_thigh','measure_bicep',
-      'calories','protein','carbs','fat','fiber','water',
+      'breakfast_cal','breakfast_protein','breakfast_fat','breakfast_carbs','breakfast_fiber','breakfast_sodium',
+      'lunch_cal','lunch_protein','lunch_fat','lunch_carbs','lunch_fiber','lunch_sodium',
+      'dinner_cal','dinner_protein','dinner_fat','dinner_carbs','dinner_fiber','dinner_sodium',
+      'snack_cal','snack_protein','snack_fat','snack_carbs','snack_fiber','snack_sodium',
+      'total_calories','total_protein','total_fat','total_carbs','total_fiber','total_sodium','water',
       'glp1_days_since_dose','glp1_dosage','glp1_dose_day','supplement_centrum',
-      'activity','notes'
+      'activity','exercise_log','notes'
     ];
 
     const rows = dates.map(d => {
       const e = entries[d];
+      const n = e.nutrition || {};
+      const meal = m => n[m] || {};
+      const exLog = (e.exercise || []).map(x => {
+        if (x.category === 'aerobic') return `${x.label} (${x.intensityLabel || 'intensity'} ${x.intensity || 'n/a'}, ${x.time || 'n/a'}min, ${x.mileage || 'n/a'}mi, ${x.cal || 'n/a'}cal)`;
+        if (x.category === 'strength') return `${x.label} (${x.weight || 'n/a'}lbs, ${x.sets || 'n/a'}x${x.reps || 'n/a'})`;
+        return `${x.label} (${x.time || 'n/a'}sec)`;
+      }).join('; ');
       return [
         e.date, e.weight?.morning, e.weight?.evening, e.weight?.delta,
         e.bloodPressure?.systolic, e.bloodPressure?.diastolic,
         e.heartRate?.active, e.heartRate?.resting, e.heartRate?.hrv,
         e.sleep?.hours, e.sleep?.quality, e.sleep?.soreness, e.mood,
         e.measurements?.bust, e.measurements?.waist, e.measurements?.hips, e.measurements?.thigh, e.measurements?.bicep,
-        e.nutrition?.calories, e.nutrition?.protein, e.nutrition?.carbs, e.nutrition?.fat, e.nutrition?.fiber, e.nutrition?.water,
+        meal('breakfast').cal, meal('breakfast').protein, meal('breakfast').fat, meal('breakfast').carbs, meal('breakfast').fiber, meal('breakfast').sodium,
+        meal('lunch').cal, meal('lunch').protein, meal('lunch').fat, meal('lunch').carbs, meal('lunch').fiber, meal('lunch').sodium,
+        meal('dinner').cal, meal('dinner').protein, meal('dinner').fat, meal('dinner').carbs, meal('dinner').fiber, meal('dinner').sodium,
+        meal('snack').cal, meal('snack').protein, meal('snack').fat, meal('snack').carbs, meal('snack').fiber, meal('snack').sodium,
+        n.totals?.calories, n.totals?.protein, n.totals?.fat, n.totals?.carbs, n.totals?.fiber, n.totals?.sodium, n.water,
         e.glp1?.daysSinceDose, e.glp1?.dosage, e.glp1?.doseDay,
         e.supplements?.centrum,
         (e.activity || '').replace(/[\r\n,]+/g, ' '),
+        exLog.replace(/[\r\n,]+/g, ' '),
         (e.notes || '').replace(/[\r\n,]+/g, ' ')
       ].map(v => `"${v ?? ''}"`).join(',');
     });
@@ -1545,6 +1626,115 @@
   let conversationHistory = [];
   let todayDataSummary = '';
 
+  const EXERCISE_CONFIG = {
+    treadmill:    { label: 'Treadmill',      category: 'aerobic',  intensityLabel: 'Speed (mph)' },
+    bike:         { label: 'Recumbent Bike', category: 'aerobic',  intensityLabel: 'Resistance level' },
+    elliptical:   { label: 'Elliptical',     category: 'aerobic',  intensityLabel: 'Level' },
+    walking:      { label: 'Walking',        category: 'aerobic',  intensityLabel: 'Pace (mph)' },
+    squats:       { label: 'Squats',         category: 'strength' },
+    calfRaises:   { label: 'Calf Raises',    category: 'strength' },
+    toeLifts:     { label: 'Toe Lifts',      category: 'strength' },
+    legPress:     { label: 'Leg Press',      category: 'strength' },
+    legExtension: { label: 'Leg Extension',  category: 'strength' },
+    bicepCurls:   { label: 'Bicep Curls',    category: 'strength' },
+    uprightRow:   { label: 'Upright Row',    category: 'strength' },
+    kickbacks:    { label: 'Kickbacks',      category: 'strength' },
+    plank:        { label: 'Plank',          category: 'core' }
+  };
+
+  let exerciseLog = [];
+
+  function renderExerciseFields() {
+    const type = document.getElementById('ex-type').value;
+    const container = document.getElementById('ex-fields');
+    container.innerHTML = '';
+    if (!type) return;
+    const cfg = EXERCISE_CONFIG[type];
+    if (cfg.category === 'aerobic') {
+      container.innerHTML = `
+        <div class="field"><label>${cfg.intensityLabel}</label><input type="number" step="0.1" id="ex-f-intensity" placeholder="0"></div>
+        <div class="field"><label>Time (min)</label><input type="number" id="ex-f-time" placeholder="0"></div>
+        <div class="field"><label>Mileage (mi)</label><input type="number" step="0.01" id="ex-f-mileage" placeholder="0.00"></div>
+        <div class="field"><label>Calories burned</label><input type="number" id="ex-f-cal" placeholder="0"></div>
+      `;
+    } else if (cfg.category === 'strength') {
+      container.innerHTML = `
+        <div class="field"><label>Weight (lbs)</label><input type="number" step="0.1" id="ex-f-weight" placeholder="0"></div>
+        <div class="field"><label>Sets</label><input type="number" id="ex-f-sets" placeholder="0"></div>
+        <div class="field"><label>Reps</label><input type="number" id="ex-f-reps" placeholder="0"></div>
+      `;
+    } else if (cfg.category === 'core') {
+      container.innerHTML = `
+        <div class="field"><label>Time (sec)</label><input type="number" id="ex-f-time" placeholder="0"></div>
+      `;
+    }
+  }
+
+  function addExerciseEntry() {
+    const type = document.getElementById('ex-type').value;
+    if (!type) return;
+    const cfg = EXERCISE_CONFIG[type];
+    const entry = { type, label: cfg.label, category: cfg.category };
+    if (cfg.category === 'aerobic') {
+      entry.intensityLabel = cfg.intensityLabel;
+      entry.intensity = document.getElementById('ex-f-intensity').value;
+      entry.time      = document.getElementById('ex-f-time').value;
+      entry.mileage    = document.getElementById('ex-f-mileage').value;
+      entry.cal        = document.getElementById('ex-f-cal').value;
+      if (!entry.intensity && !entry.time && !entry.mileage && !entry.cal) return;
+    } else if (cfg.category === 'strength') {
+      entry.weight = document.getElementById('ex-f-weight').value;
+      entry.sets   = document.getElementById('ex-f-sets').value;
+      entry.reps   = document.getElementById('ex-f-reps').value;
+      if (!entry.weight && !entry.sets && !entry.reps) return;
+    } else if (cfg.category === 'core') {
+      entry.time = document.getElementById('ex-f-time').value;
+      if (!entry.time) return;
+    }
+    exerciseLog.push(entry);
+    document.getElementById('ex-type').value = '';
+    document.getElementById('ex-fields').innerHTML = '';
+    renderExerciseLog();
+  }
+
+  function removeExerciseEntry(idx) {
+    exerciseLog.splice(idx, 1);
+    renderExerciseLog();
+  }
+
+  function exerciseEntryText(e) {
+    if (e.category === 'aerobic') {
+      const parts = [];
+      if (e.intensity) parts.push(`${e.intensityLabel.replace(/\s*\(.*?\)/, '')} ${e.intensity}`);
+      if (e.time)      parts.push(`${e.time} min`);
+      if (e.mileage)   parts.push(`${e.mileage} mi`);
+      if (e.cal)       parts.push(`${e.cal} cal`);
+      return parts.join(' · ') || 'no details';
+    } else if (e.category === 'strength') {
+      const parts = [];
+      if (e.weight)          parts.push(`${e.weight} lbs`);
+      if (e.sets || e.reps)  parts.push(`${e.sets || 0} sets x ${e.reps || 0} reps`);
+      return parts.join(' · ') || 'no details';
+    }
+    return e.time ? `${e.time} sec` : 'no details';
+  }
+
+  function renderExerciseLog() {
+    const list = document.getElementById('ex-log-list');
+    const empty = document.getElementById('ex-log-empty');
+    list.innerHTML = '';
+    empty.style.display = exerciseLog.length === 0 ? 'block' : 'none';
+    exerciseLog.forEach((e, i) => {
+      const row = document.createElement('div');
+      row.className = 'ex-log-item';
+      row.innerHTML = `
+        <div class="ex-log-text"><strong>${e.label}</strong>${exerciseEntryText(e)}</div>
+        <button type="button" class="ex-log-remove" onclick="removeExerciseEntry(${i})" aria-label="Remove">&times;</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
   function collectData() {
     return {
       date: document.getElementById('entry-date').value,
@@ -1577,49 +1767,32 @@
         bicep: document.getElementById('measure-bicep').value
       },
       activity:  document.getElementById('activity').value,
-      nutrition: {
-        calories: document.getElementById('cal-total').value,
-        protein:  document.getElementById('macro-protein').value,
-        carbs:    document.getElementById('macro-carbs').value,
-        fat:      document.getElementById('macro-fat').value,
-        fiber:    document.getElementById('macro-fiber').value,
-        water:    document.getElementById('water').value
-      },
+      nutrition: (function() {
+        const meals = ['breakfast', 'lunch', 'dinner', 'snack'];
+        const fields = ['cal', 'protein', 'fat', 'carbs', 'fiber', 'sodium'];
+        const out = {};
+        const totals = { calories: 0, protein: 0, fat: 0, carbs: 0, fiber: 0, sodium: 0 };
+        meals.forEach(m => {
+          out[m] = {};
+          fields.forEach(f => {
+            const val = document.getElementById(`nut-${m}-${f}`).value;
+            out[m][f] = val;
+            if (val !== '') {
+              const key = f === 'cal' ? 'calories' : f;
+              totals[key] += parseFloat(val) || 0;
+            }
+          });
+        });
+        out.totals = totals;
+        out.water = document.getElementById('water').value;
+        return out;
+      })(),
       glp1: {
         daysSinceDose: document.getElementById('glp1-days').value,
         dosage:        document.getElementById('glp1-dosage').value,
         doseDay:       document.getElementById('dose-day').checked
       },
-      exercise: {
-        treadmill: {
-          speed: document.getElementById('ex-treadmill-speed').value,
-          incline: document.getElementById('ex-treadmill-incline').value,
-          time: document.getElementById('ex-treadmill-time').value,
-          mileage: document.getElementById('ex-treadmill-mileage').value,
-          cal: document.getElementById('ex-treadmill-cal').value
-        },
-        bike: {
-          speed: document.getElementById('ex-bike-speed').value,
-          time: document.getElementById('ex-bike-time').value,
-          resistance: document.getElementById('ex-bike-resistance').value,
-          mileage: document.getElementById('ex-bike-mileage').value,
-          cal: document.getElementById('ex-bike-cal').value
-        },
-        elliptical: {
-          level: document.getElementById('ex-elliptical-level').value,
-          time: document.getElementById('ex-elliptical-time').value,
-          cal: document.getElementById('ex-elliptical-cal').value
-        },
-        plank: { time: document.getElementById('ex-plank-time').value },
-        squats: { sets: document.getElementById('ex-squats-sets').value, reps: document.getElementById('ex-squats-reps').value },
-        calfRaises: { sets: document.getElementById('ex-calf-sets').value, reps: document.getElementById('ex-calf-reps').value },
-        toeLifts: { sets: document.getElementById('ex-toe-sets').value, reps: document.getElementById('ex-toe-reps').value },
-        legPress: { weight: document.getElementById('ex-legpress-weight').value, sets: document.getElementById('ex-legpress-sets').value, reps: document.getElementById('ex-legpress-reps').value },
-        legExtension: { weight: document.getElementById('ex-legext-weight').value, sets: document.getElementById('ex-legext-sets').value, reps: document.getElementById('ex-legext-reps').value },
-        bicepCurls: { weight: document.getElementById('ex-bicep-weight').value, sets: document.getElementById('ex-bicep-sets').value, reps: document.getElementById('ex-bicep-reps').value },
-        uprightRow: { weight: document.getElementById('ex-uprow-weight').value, sets: document.getElementById('ex-uprow-sets').value, reps: document.getElementById('ex-uprow-reps').value },
-        kickbacks: { weight: document.getElementById('ex-kickback-weight').value, sets: document.getElementById('ex-kickback-sets').value, reps: document.getElementById('ex-kickback-reps').value }
-      },
+      exercise: exerciseLog.slice(),
       meditation: {
         day: document.getElementById('meditation-day').value,
         duration: document.getElementById('meditation-duration').value
@@ -1718,11 +1891,28 @@ PATTERN READ: Explain using the data from today and recent days. Flowing prose, 
     if (recent.length === 0) return null;
     const lines = recent.map(d => {
       const e = entries[d];
-      return `${d}: weight ${e.weight?.morning || 'n/a'} lbs, calories ${e.nutrition?.calories || 'n/a'}, protein ${e.nutrition?.protein || 'n/a'}g, resting HR ${e.heartRate?.resting || 'n/a'}, HRV ${e.heartRate?.hrv || 'n/a'}, sleep ${e.sleep?.hours || 'n/a'}h (quality ${e.sleep?.quality || 'n/a'}), soreness ${e.sleep?.soreness || 'n/a'}, mood ${e.mood || 'n/a'}, activity: ${e.activity || 'n/a'}`;
+      return `${d}: weight ${e.weight?.morning || 'n/a'} lbs, calories ${e.nutrition?.totals?.calories || 'n/a'}, protein ${e.nutrition?.totals?.protein || 'n/a'}g, sodium ${e.nutrition?.totals?.sodium || 'n/a'}mg, resting HR ${e.heartRate?.resting || 'n/a'}, HRV ${e.heartRate?.hrv || 'n/a'}, sleep ${e.sleep?.hours || 'n/a'}h (quality ${e.sleep?.quality || 'n/a'}), soreness ${e.sleep?.soreness || 'n/a'}, mood ${e.mood || 'n/a'}, activity: ${e.activity || 'n/a'}`;
     });
     return { text: lines.join('\n'), count: recent.length, requested: days };
   }
 
+
+  function formatMealForPrompt(label, m) {
+    if (!m.cal && !m.protein && !m.fat && !m.carbs && !m.fiber && !m.sodium) return `- ${label}: not entered`;
+    return `- ${label}: ${m.cal || 0} cal, protein ${m.protein || 0}g, fat ${m.fat || 0}g, carbs ${m.carbs || 0}g, fiber ${m.fiber || 0}g, sodium ${m.sodium || 0}mg`;
+  }
+
+  function formatExerciseForPrompt(log) {
+    if (!log || log.length === 0) return 'None logged today.';
+    return log.map(e => {
+      if (e.category === 'aerobic') {
+        return `- ${e.label}: ${e.intensityLabel || 'intensity'} ${e.intensity || 'n/a'}, time ${e.time || 'n/a'} min, mileage ${e.mileage || 'n/a'} mi, calories ${e.cal || 'n/a'}`;
+      } else if (e.category === 'strength') {
+        return `- ${e.label}: ${e.weight || 'n/a'} lbs, ${e.sets || 'n/a'} sets x ${e.reps || 'n/a'} reps`;
+      }
+      return `- ${e.label}: ${e.time || 'n/a'} sec`;
+    }).join('\n');
+  }
 
   function buildPrompt(data, modes) {
     const modeKeys = Array.isArray(modes) ? modes : [modes];
@@ -1779,11 +1969,11 @@ ACTIVITY
 - ${data.activity || 'not entered'}
 
 NUTRITION
-- Total calories: ${data.nutrition.calories || 'not entered'} (target: ${t.calories})
-- Protein: ${data.nutrition.protein || 'not entered'}g (target: ${t.protein}g)
-- Carbs: ${data.nutrition.carbs || 'not entered'}g
-- Fat: ${data.nutrition.fat || 'not entered'}g
-- Fiber: ${data.nutrition.fiber || 'not entered'}g (target: ${t.fiber}g+)
+${formatMealForPrompt('Breakfast', data.nutrition.breakfast)}
+${formatMealForPrompt('Lunch', data.nutrition.lunch)}
+${formatMealForPrompt('Dinner', data.nutrition.dinner)}
+${formatMealForPrompt('Snacks', data.nutrition.snack)}
+- Daily totals: ${data.nutrition.totals.calories || 0} cal (target: ${t.calories}), protein ${data.nutrition.totals.protein || 0}g (target: ${t.protein}g), fat ${data.nutrition.totals.fat || 0}g, carbs ${data.nutrition.totals.carbs || 0}g, fiber ${data.nutrition.totals.fiber || 0}g (target: ${t.fiber}g+), sodium ${data.nutrition.totals.sodium || 0}mg
 - Water: ${data.nutrition.water || 'not entered'} oz
 
 GLP-1 MEDICATION
@@ -1792,18 +1982,7 @@ GLP-1 MEDICATION
 - Dose day today: ${data.glp1.doseDay ? 'Yes' : 'No'}
 
 EXERCISE
-- Treadmill: speed ${data.exercise.treadmill.speed || 'n/a'} mph, incline ${data.exercise.treadmill.incline || 'n/a'}%, time ${data.exercise.treadmill.time || 'n/a'} min, mileage ${data.exercise.treadmill.mileage || 'n/a'} mi, calories ${data.exercise.treadmill.cal || 'n/a'}
-- Recumbent bike: speed ${data.exercise.bike.speed || 'n/a'} mph, time ${data.exercise.bike.time || 'n/a'} min, resistance ${data.exercise.bike.resistance || 'n/a'}, mileage ${data.exercise.bike.mileage || 'n/a'} mi, calories ${data.exercise.bike.cal || 'n/a'}
-- Elliptical: level ${data.exercise.elliptical.level || 'n/a'}, time ${data.exercise.elliptical.time || 'n/a'} min, calories ${data.exercise.elliptical.cal || 'n/a'}
-- Plank: ${data.exercise.plank.time || 'n/a'} sec
-- Squats: ${data.exercise.squats.sets || 'n/a'} sets x ${data.exercise.squats.reps || 'n/a'} reps
-- Calf raises: ${data.exercise.calfRaises.sets || 'n/a'} sets x ${data.exercise.calfRaises.reps || 'n/a'} reps
-- Toe lifts: ${data.exercise.toeLifts.sets || 'n/a'} sets x ${data.exercise.toeLifts.reps || 'n/a'} reps
-- Leg press: ${data.exercise.legPress.weight || 'n/a'} lbs, ${data.exercise.legPress.sets || 'n/a'} sets x ${data.exercise.legPress.reps || 'n/a'} reps
-- Leg extension: ${data.exercise.legExtension.weight || 'n/a'} lbs, ${data.exercise.legExtension.sets || 'n/a'} sets x ${data.exercise.legExtension.reps || 'n/a'} reps
-- Bicep curls: ${data.exercise.bicepCurls.weight || 'n/a'} lbs, ${data.exercise.bicepCurls.sets || 'n/a'} sets x ${data.exercise.bicepCurls.reps || 'n/a'} reps
-- Upright row: ${data.exercise.uprightRow.weight || 'n/a'} lbs, ${data.exercise.uprightRow.sets || 'n/a'} sets x ${data.exercise.uprightRow.reps || 'n/a'} reps
-- Kickbacks: ${data.exercise.kickbacks.weight || 'n/a'} lbs, ${data.exercise.kickbacks.sets || 'n/a'} sets x ${data.exercise.kickbacks.reps || 'n/a'} reps
+${formatExerciseForPrompt(data.exercise)}
 
 MEDITATION
 - Day: ${data.meditation.day || 'not entered'}, Duration: ${data.meditation.duration || 'not entered'} min
@@ -1866,7 +2045,7 @@ End your entire response with one brief reminder that you are not a doctor and h
       return;
     }
 
-    if (!data.weight.morning && !data.weight.evening && !data.nutrition.calories) {
+    if (!data.weight.morning && !data.weight.evening && !data.nutrition.totals.calories) {
       errorEl.textContent = 'Please enter at least a few data points before analyzing.';
       errorEl.style.display = 'block';
       return;
@@ -2161,6 +2340,7 @@ Write in warm, conversational prose. No bullet points within sections. End with 
   loadSavedKey();
   loadSavedTargets();
   updateWaterBar();
+  renderExerciseLog();
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
